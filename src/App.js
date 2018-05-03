@@ -3,7 +3,6 @@ import logo from "./logo.svg";
 import "./App.css";
 import socketIOClient from "socket.io-client";
 
-
 const socket = socketIOClient("http://localhost:5000");
 
 const ChatList = props => {
@@ -63,10 +62,11 @@ class App extends Component {
     if (array[0] === "/nick") {
       let newName = this.state.input.slice(6);
       socket.emit("changeName", this.state.name, newName, this.state.room);
-      this.setState({ name: newName});
+      this.setState({ name: newName });
     } else if (array[0] === "/join") {
-      socket.emit("changeRoom", this.state.room, array[1], this.state.name);
-      this.setState({ room: array[1] });
+      let newRoom = this.state.input.slice(6);
+      socket.emit("changeRoom", this.state.room, newRoom, this.state.name);
+      this.setState({ room: newRoom });
     } else {
       socket.emit(
         "sendChat",
@@ -81,15 +81,14 @@ class App extends Component {
 
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "instant" });
-  }
+  };
   componentDidUpdate() {
     this.scrollToBottom();
-  }  
+  }
 
   render() {
     console.log(this.state.room);
     return (
-      
       <div className="App">
         <h1>Chat Room</h1>
         <div className="room-title">Current Room: {this.state.room}</div>
